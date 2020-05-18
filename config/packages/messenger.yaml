@@ -1,10 +1,10 @@
 framework:
     messenger:
-        default_bus: query.bus
+        default_bus: messenger.bus.command
         buses:
-            command.bus:
-                middleware:
-                    - doctrine_transaction
-            query.bus:
-            event.bus:
+            messenger.bus.command:
                 default_middleware: false
+                middleware:
+                    - handle_message
+
+            messenger.bus.query: ~

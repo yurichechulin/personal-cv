@@ -1,9 +1,10 @@
 <?php
 
 
-namespace App\Core\Ports\Rest\Post;
+namespace App\Core\UI\Rest\Post;
 
 use App\Core\Application\Query\Post\GetPosts\GetPostsQuery;
+use App\Shared\Application\Query\QueryBusInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,20 +15,21 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class GetPostsAction
 {
-    use HandleTrait;
+    protected QueryBusInterface $queryBus;
 
-    private NormalizerInterface $normalizer;
+    protected NormalizerInterface $normalizer;
 
     /**
      * GetPostsAction constructor.
-     * @param MessageBusInterface $messageBus
+     * @param QueryBusInterface $queryBus
      * @param NormalizerInterface $normalizer
      */
-    public function __construct(MessageBusInterface $messageBus, NormalizerInterface $normalizer)
+    public function __construct(QueryBusInterface $queryBus, NormalizerInterface $normalizer)
     {
-        $this->messageBus = $messageBus;
+        $this->queryBus = $queryBus;
         $this->normalizer = $normalizer;
     }
+
 
     /**
      * @param Request $request
@@ -36,7 +38,7 @@ class GetPostsAction
      */
     public function __invoke(Request $request) : Response {
         $query = new GetPostsQuery();
-        $data = $this->handle($query);
+        $data = $this->queryBus->ask($query);
         return new JsonResponse($this->normalizer->normalize($data), Response::HTTP_OK);
     }
 }

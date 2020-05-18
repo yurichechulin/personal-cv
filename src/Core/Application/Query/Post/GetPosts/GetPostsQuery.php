@@ -3,7 +3,9 @@
 
 namespace App\Core\Application\Query\Post\GetPosts;
 
-class GetPostsQuery
+use App\Shared\Application\Query\QueryInterface;
+
+class GetPostsQuery implements QueryInterface
 {
 
 }

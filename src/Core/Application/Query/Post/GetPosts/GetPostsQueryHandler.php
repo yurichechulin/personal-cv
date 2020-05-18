@@ -6,9 +6,9 @@ namespace App\Core\Application\Query\Post\GetPosts;
 
 use App\Core\Application\Query\Post\DTO\PostDTO;
 use App\Core\Domain\Model\Post\PostRepositoryInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use App\Shared\Application\Query\QueryHandlerInterface;
 
-final class GetPostsQueryHandler implements MessageHandlerInterface
+final class GetPostsQueryHandler implements QueryHandlerInterface
 {
     protected PostRepositoryInterface $postRepository;
 
