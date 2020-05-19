@@ -1,6 +1,6 @@
 framework:
     messenger:
-        default_bus: messenger.bus.command
+        default_bus: messenger.bus.query
         buses:
             messenger.bus.command:
                 default_middleware: false
