@@ -33,8 +33,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-    App\Core\UI\Rest\:
-        resource: '../src/Core/UI/Rest'
+    App\Core\UI\Rest\Controller\:
+        resource: '../src/Core/UI/Rest/Controller'
         tags: [ 'controller.service_arguments' ]
 
     App\Shared\Infrastructure\Bus\Command\MessengerCommandBus:

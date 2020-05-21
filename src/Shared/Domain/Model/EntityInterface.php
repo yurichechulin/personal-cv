@@ -4,10 +4,12 @@
 namespace App\Shared\Domain\Model;
 
 
+use Ramsey\Uuid\UuidInterface;
+
 interface EntityInterface
 {
     /**
-     * @return string
+     * @return UuidInterface
      */
-    public function getUuid(): string;
+    public function getUuid(): UuidInterface;
 }

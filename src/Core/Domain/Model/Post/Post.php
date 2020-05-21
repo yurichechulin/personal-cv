@@ -1,10 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Core\Domain\Model\Post;
+
+use App\Core\Domain\Model\User\User;
 use App\Shared\Domain\Model\EntityInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity()
@@ -13,14 +17,14 @@ class Post implements EntityInterface
 {
     /**
      * @ORM\Id
-     * @ORM\Column(type="uuid")
+     * @ORM\Column(type="uuid", unique=true)
      */
-    private string $uuid;
+    private UuidInterface $uuid;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $name;
+    private string $title;
 
     /**
      * @ORM\Column(type="text")
@@ -28,21 +32,30 @@ class Post implements EntityInterface
     private string $description;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Core\Domain\Model\User\User")
+     * @ORM\JoinColumn(name="user_uuid", referencedColumnName="uuid", nullable=true, onDelete="cascade", nullable=false)
+     */
+    private User $user;
+
+    /**
      * @ORM\Column(type="datetime_immutable", options={"default"="CURRENT_TIMESTAMP"}, nullable=false)
      */
-    private DateTimeImmutable $created_at;
+    private DateTimeImmutable $createdAt;
 
     /**
      * Post constructor.
+     * @param UuidInterface $uuid
      * @param string $name
      * @param string $description
+     * @param User $user
      */
-    public function __construct(string $name, string $description)
+    public function __construct(UuidInterface $uuid, string $name, string $description, User $user)
     {
-        $this->setUuid(Uuid::uuid4());
+        $this->setUuid($uuid);
         $this->setName($name);
         $this->setDescription($description);
         $this->setCreatedAt(new DateTimeImmutable());
+        $this->setUser($user);
     }
 
     /**
@@ -62,9 +75,9 @@ class Post implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return UuidInterface
      */
-    public function getUuid(): string
+    public function getUuid(): UuidInterface
     {
         return $this->uuid;
     }
@@ -72,9 +85,9 @@ class Post implements EntityInterface
     /**
      * @return string
      */
-    public function getName(): string
+    public function getTitle(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
     /**
@@ -90,7 +103,15 @@ class Post implements EntityInterface
      */
     public function getCreatedAt(): DateTimeImmutable
     {
-        return $this->created_at;
+        return $this->createdAt;
+    }
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
     }
 
     /**
@@ -98,7 +119,7 @@ class Post implements EntityInterface
      */
     private function setName(string $name): void
     {
-        $this->name = $name;
+        $this->title = $name;
     }
 
     /**
@@ -110,18 +131,26 @@ class Post implements EntityInterface
     }
 
     /**
-     * @param string $uuid
+     * @param UuidInterface $uuid
      */
-    private function setUuid(string $uuid): void
+    private function setUuid(UuidInterface $uuid): void
     {
         $this->uuid = $uuid;
     }
 
     /**
-     * @param DateTimeImmutable $created_at
+     * @param DateTimeImmutable $createdAt
      */
-    private function setCreatedAt(DateTimeImmutable $created_at): void
+    private function setCreatedAt(DateTimeImmutable $createdAt): void
     {
-        $this->created_at = $created_at;
+        $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @param User $user
+     */
+    private function setUser(User $user): void
+    {
+        $this->user = $user;
     }
 }

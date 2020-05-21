@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Core\Application\Query\Post\DTO;
-
 
 use App\Core\Domain\Model\Post\Post;
 use DateTimeImmutable;
@@ -25,7 +25,7 @@ class PostDTO
         $dto = new static();
 
         $dto->setUuid($post->getUuid());
-        $dto->setName($post->getName());
+        $dto->setName($post->getTitle());
         $dto->setDescription($post->getDescription());
         $dto->setCreatedAt($post->getCreatedAt());
 

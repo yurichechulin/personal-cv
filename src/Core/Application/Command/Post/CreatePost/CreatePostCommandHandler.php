@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Core\Application\Command\Post\CreatePost;
-
 
 use App\Core\Domain\Model\Post\Post;
 use App\Core\Domain\Model\Post\PostRepositoryInterface;
@@ -10,7 +10,7 @@ use App\Shared\Application\Command\CommandHandlerInterface;
 
 class CreatePostCommandHandler implements CommandHandlerInterface
 {
-    protected PostRepositoryInterface $postRepository;
+    private PostRepositoryInterface $postRepository;
 
     /**
      * GetPostsQueryHandler constructor.

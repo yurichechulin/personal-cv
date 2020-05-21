@@ -1,8 +1,8 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Core\Application\Query\Post\GetPosts;
-
 
 use App\Core\Application\Query\Post\DTO\PostDTO;
 use App\Core\Domain\Model\Post\PostRepositoryInterface;
@@ -10,7 +10,7 @@ use App\Shared\Application\Query\QueryHandlerInterface;
 
 final class GetPostsQueryHandler implements QueryHandlerInterface
 {
-    protected PostRepositoryInterface $postRepository;
+    private PostRepositoryInterface $postRepository;
 
     /**
      * GetPostsQueryHandler constructor.

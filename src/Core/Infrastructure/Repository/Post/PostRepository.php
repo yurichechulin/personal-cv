@@ -1,5 +1,6 @@
 <?php
 
+declare(strict_types=1);
 
 namespace App\Core\Infrastructure\Repository\Post;
 
@@ -32,7 +33,8 @@ class PostRepository implements PostRepositoryInterface
      * @param Post $post
      * @return bool
      */
-    public function save(Post $post) : bool {
+    public function save(Post $post) : bool
+    {
         $this->_em->persist($post);
         $this->_em->flush();
         return true;
