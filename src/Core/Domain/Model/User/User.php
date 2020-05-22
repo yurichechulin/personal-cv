@@ -12,13 +12,11 @@ use Ramsey\Uuid\UuidInterface;
 
 /**
  * @ORM\Entity()
+ * @ORM\Table(name="app_user")
  */
 class User implements EntityInterface
 {
     public const DEFAULT_USER_ROLE = 'ROLE_USER';
-    public const MAX_EMAIL_LENGTH = 255;
-    public const MAX_USER_NAME_LENGTH = 255;
-    public const MAX_PASSWORD_LENGTH = 255;
 
     /**
      * @ORM\Id
@@ -34,7 +32,7 @@ class User implements EntityInterface
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private string $name;
+    private string $userName;
 
     /**
      * @var array<int, string>
@@ -46,7 +44,7 @@ class User implements EntityInterface
     /**
      * @ORM\Column(type="string", nullable=false)
      */
-    private string $password;
+    private string $hashedPassword;
 
     /**
      * @ORM\Column(type="datetime_immutable", options={"default"="CURRENT_TIMESTAMP"}, nullable=false)
@@ -56,23 +54,21 @@ class User implements EntityInterface
     /**
      * User constructor.
      * @param string $email
-     * @param string $name
-     * @param array $roles
+     * @param string $userName
      * @param string $password
-     * @param DateTimeImmutable $createdAt
+     * @param array $roles
      */
     public function __construct(string $email,
-                                string $name,
-                                array $roles,
+                                string $userName,
                                 string $password,
-                                DateTimeImmutable $createdAt)
+                                array $roles = [self::DEFAULT_USER_ROLE])
     {
         $this->setUuid(Uuid::uuid4());
         $this->setEmail($email);
-        $this->setName($name);
+        $this->setName($userName);
         $this->setRoles($roles);
         $this->setPassword($password);
-        $this->setCreatedAt($createdAt);
+        $this->setCreatedAt(new DateTimeImmutable());
     }
 
 
@@ -97,7 +93,7 @@ class User implements EntityInterface
      */
     public function getName(): string
     {
-        return $this->name;
+        return $this->userName;
     }
 
     /**
@@ -113,7 +109,7 @@ class User implements EntityInterface
      */
     public function getPassword(): string
     {
-        return $this->password;
+        return $this->hashedPassword;
     }
 
     /**
@@ -150,11 +146,11 @@ class User implements EntityInterface
     }
 
     /**
-     * @param string $name
+     * @param string $userName
      */
-    private function setName(string $name): void
+    private function setName(string $userName): void
     {
-        $this->name = $name;
+        $this->userName = $userName;
     }
 
     /**
@@ -166,11 +162,11 @@ class User implements EntityInterface
     }
 
     /**
-     * @param string $password
+     * @param string $hashedPassword
      */
-    private function setPassword(string $password): void
+    private function setPassword(string $hashedPassword): void
     {
-        $this->password = $password;
+        $this->hashedPassword = $hashedPassword;
     }
 
     /**
