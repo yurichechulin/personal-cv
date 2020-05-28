@@ -7,7 +7,6 @@ namespace App\Core\Domain\Model\User;
 use App\Shared\Domain\Model\EntityInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 
 /**
@@ -53,17 +52,19 @@ class User implements EntityInterface
 
     /**
      * User constructor.
+     * @param UuidInterface $uuid
      * @param string $email
      * @param string $userName
      * @param string $password
      * @param array $roles
      */
-    public function __construct(string $email,
+    public function __construct(UuidInterface $uuid,
+                                string $email,
                                 string $userName,
                                 string $password,
                                 array $roles = [self::DEFAULT_USER_ROLE])
     {
-        $this->setUuid(Uuid::uuid4());
+        $this->setUuid($uuid);
         $this->setEmail($email);
         $this->setName($userName);
         $this->setRoles($roles);

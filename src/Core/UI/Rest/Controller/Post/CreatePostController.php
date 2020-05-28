@@ -16,7 +16,7 @@ class CreatePostController extends CommandController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/posts", name="add_post", methods={"POST"})
+     * @Route("/api/posts", name="add_post", methods={"POST"})
      */
     public function __invoke(Request $request) : Response {
         $command = new CreatePostCommand(

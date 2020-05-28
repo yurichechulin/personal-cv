@@ -6,6 +6,7 @@ namespace App\Core\UI\Rest\Controller\User;
 
 use App\Core\Application\Command\User\CreateUser\CreateUserCommand;
 use App\Core\UI\Rest\Controller\CommandController;
+use App\Shared\Domain\Service\Assert\Assert;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,11 +17,21 @@ class RegisterUserController extends CommandController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/users", name="add_user", methods={"POST"})
+     * @Route("/api/users", name="add_user", methods={"POST"})
      */
     public function __invoke(Request $request) : Response {
-        $command = new CreateUserCommand($request->request->get("email"), $request->request->get("name"), $request->request->get("password"));
-        $this->handle($command);
+        $uuid = $request->get("uuid");
+        $email = $request->get("email");
+        $name = $request->get("name");
+        $password = $request->request->get("password");
+
+        Assert::uuid($uuid, "Поле uuid не соответствует типу");
+        Assert::email($email, "Поле email не соответствует типу");
+        Assert::notEmpty($name, "Поле name не должно быть пустым");
+        Assert::notEmpty($password, "Поле password не должно быть пустым");
+
+        $this->handle(new CreateUserCommand($uuid, $email, $name, $password));
+
         return new JsonResponse(["message" => "Пользователь создан"], JsonResponse::HTTP_CREATED);
     }
 }

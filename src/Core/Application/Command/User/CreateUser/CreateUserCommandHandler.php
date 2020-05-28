@@ -25,7 +25,7 @@ class CreateUserCommandHandler implements CommandHandlerInterface
      * @param CreateUserCommand $command
      */
     public function __invoke(CreateUserCommand $command) : void {
-        $user = new User($command->getEmail(), $command->getName(), $command->getPassword());
+        $user = new User($command->getUuid(), $command->getEmail(), $command->getName(), $command->getPassword());
         $this->userRepository->save($user);
     }
 
