@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Core\Application\Command\User\CreateUser;
 
-
 use App\Shared\Application\Command\CommandInterface;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Model\User;
 
+use App\Core\Domain\ValueObject\Email;
+use App\Core\Domain\ValueObject\HashedPassword;
 use App\Shared\Domain\Model\EntityInterface;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
@@ -26,7 +28,7 @@ class User implements EntityInterface
     /**
      * @ORM\Column(type="string", unique=true, length=255)
      */
-    private string $email;
+    private Email $email;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -43,7 +45,7 @@ class User implements EntityInterface
     /**
      * @ORM\Column(type="string", nullable=false)
      */
-    private string $hashedPassword;
+    private HashedPassword $hashedPassword;
 
     /**
      * @ORM\Column(type="datetime_immutable", options={"default"="CURRENT_TIMESTAMP"}, nullable=false)
@@ -53,15 +55,15 @@ class User implements EntityInterface
     /**
      * User constructor.
      * @param UuidInterface $uuid
-     * @param string $email
+     * @param Email $email
      * @param string $userName
-     * @param string $password
+     * @param HashedPassword $password
      * @param array $roles
      */
     public function __construct(UuidInterface $uuid,
-                                string $email,
+                                Email $email,
                                 string $userName,
-                                string $password,
+                                HashedPassword $password,
                                 array $roles = [self::DEFAULT_USER_ROLE])
     {
         $this->setUuid($uuid);
@@ -82,9 +84,9 @@ class User implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return Email
      */
-    public function getEmail(): string
+    public function getEmail(): Email
     {
         return $this->email;
     }
@@ -106,9 +108,9 @@ class User implements EntityInterface
     }
 
     /**
-     * @return string
+     * @return HashedPassword
      */
-    public function getPassword(): string
+    public function getPassword(): HashedPassword
     {
         return $this->hashedPassword;
     }
@@ -139,9 +141,9 @@ class User implements EntityInterface
     }
 
     /**
-     * @param string $email
+     * @param Email $email
      */
-    private function setEmail(string $email): void
+    private function setEmail(Email $email): void
     {
         $this->email = $email;
     }
@@ -163,9 +165,9 @@ class User implements EntityInterface
     }
 
     /**
-     * @param string $hashedPassword
+     * @param HashedPassword $hashedPassword
      */
-    private function setPassword(string $hashedPassword): void
+    private function setPassword(HashedPassword $hashedPassword): void
     {
         $this->hashedPassword = $hashedPassword;
     }
