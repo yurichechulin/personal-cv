@@ -9,6 +9,12 @@ use Webmozart\Assert\Assert as WebmozartAssert;
 
 final class Assert extends WebmozartAssert
 {
+    /**
+     * @param string $value
+     * @param string $format
+     * @param string $message
+     * @throws InvalidInputDataException
+     */
     public static function dateTimeString(string $value, string $format, string $message = ''): void
     {
         $date = \DateTimeImmutable::createFromFormat($format, $value);
@@ -24,7 +30,6 @@ final class Assert extends WebmozartAssert
 
     /**
      * @param string $message
-     *
      * @throws InvalidInputDataException
      */
     protected static function reportInvalidArgument($message): void

@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Model\User;
 
-use App\Core\Domain\ValueObject\Email;
-use App\Core\Domain\ValueObject\HashedPassword;
 use App\Shared\Domain\Model\EntityInterface;
+use App\Shared\Domain\Service\Assert\Assert;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
@@ -19,6 +18,8 @@ class User implements EntityInterface
 {
     public const DEFAULT_USER_ROLE = 'ROLE_USER';
 
+    public const MAX_PASSWORD_LENGTH = 255;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="uuid", unique=true)
@@ -28,7 +29,12 @@ class User implements EntityInterface
     /**
      * @ORM\Column(type="string", unique=true, length=255)
      */
-    private Email $email;
+    private string $email;
+
+    /**
+     * @ORM\Column(type="string", nullable=false)
+     */
+    private string $hashedPassword;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -43,29 +49,29 @@ class User implements EntityInterface
     private array $roles = [];
 
     /**
-     * @ORM\Column(type="string", nullable=false)
-     */
-    private HashedPassword $hashedPassword;
-
-    /**
      * @ORM\Column(type="datetime_immutable", options={"default"="CURRENT_TIMESTAMP"}, nullable=false)
      */
     private DateTimeImmutable $createdAt;
 
+
     /**
      * User constructor.
      * @param UuidInterface $uuid
-     * @param Email $email
+     * @param string $email
+     * @param string $password
+     * @param UniqueUserSpecificationInterface $uniqueUserSpecification
      * @param string $userName
-     * @param HashedPassword $password
-     * @param array $roles
+     * @param string[] $roles
      */
     public function __construct(UuidInterface $uuid,
-                                Email $email,
+                                string $email,
+                                string $password,
+                                UniqueUserSpecificationInterface $uniqueUserSpecification,
                                 string $userName,
-                                HashedPassword $password,
                                 array $roles = [self::DEFAULT_USER_ROLE])
     {
+        $uniqueUserSpecification->isUserUnique($uuid, $email);
+
         $this->setUuid($uuid);
         $this->setEmail($email);
         $this->setName($userName);
@@ -84,9 +90,9 @@ class User implements EntityInterface
     }
 
     /**
-     * @return Email
+     * @return string
      */
-    public function getEmail(): Email
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -108,9 +114,9 @@ class User implements EntityInterface
     }
 
     /**
-     * @return HashedPassword
+     * @return string
      */
-    public function getPassword(): HashedPassword
+    public function getPassword(): string
     {
         return $this->hashedPassword;
     }
@@ -141,10 +147,11 @@ class User implements EntityInterface
     }
 
     /**
-     * @param Email $email
+     * @param string $email
      */
-    private function setEmail(Email $email): void
+    private function setEmail(string $email): void
     {
+        Assert::email($email, "Поле должно быть email-ом");
         $this->email = $email;
     }
 
@@ -161,14 +168,17 @@ class User implements EntityInterface
      */
     private function setRoles(array $roles): void
     {
-        $this->roles = $roles;
+        foreach ($roles as $role) {
+            $this->addRole($role);
+        }
     }
 
     /**
-     * @param HashedPassword $hashedPassword
+     * @param string $hashedPassword
      */
-    private function setPassword(HashedPassword $hashedPassword): void
+    private function setPassword(string $hashedPassword): void
     {
+        Assert::maxLength($hashedPassword, self::MAX_PASSWORD_LENGTH, 'Password should contain at most %2$s characters. Got: %s');
         $this->hashedPassword = $hashedPassword;
     }
 
@@ -178,5 +188,12 @@ class User implements EntityInterface
     private function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
+    }
+
+    /**
+     * @param string $role
+     */
+    private function addRole(string $role) : void {
+        $this->roles[] = $role;
     }
 }
