@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Core\Domain\ValueObject;
+namespace App\User\Domain\ValueObject;
 
 use App\Shared\Domain\Service\Assert\Assert;
-use RuntimeException;
+use const PASSWORD_BCRYPT;
 
 final class HashedPassword
 {
     private string $hashedPassword;
+
+    public const COST = 12;
 
     private function __construct(string $hashedPassword)
     {
@@ -17,48 +19,51 @@ final class HashedPassword
     }
 
     /**
-     * @param string $password
+     * @param string $plainPassword
      * @return static
      */
-    public static function encode(string $password) : self
+    public static function encode(string $plainPassword): self
     {
-        Assert::minLength($password, 6, "Пароль должен быть не меньше 6 символов");
-        return new self(self::getHash($password));
+        return new self(self::hash($plainPassword));
     }
 
     /**
-     * @param string $password
-     * @return bool
+     * @param string $hashedPassword
+     * @return static
      */
-    public function verify(string $password) : bool {
-        return password_verify($password, $this->hashedPassword);
+    public static function fromHash(string $hashedPassword): self
+    {
+        return new self($hashedPassword);
+    }
+
+    public function match(string $plainPassword): bool
+    {
+        return password_verify($plainPassword, $this->hashedPassword);
     }
 
     /**
+     * @param string $plainPassword
      * @return string
      */
-    public function toString() : string {
-        return $this->hashedPassword;
-    }
+    private static function hash(string $plainPassword): string
+    {
+        Assert::minLength($plainPassword, 6, 'Min 6 characters password');
 
-    /**
-     * @return string
-     */
-    public function __toString() : string {
-        return $this->hashedPassword;
-    }
-
-    /**
-     * @param string $password
-     * @return string
-     */
-    private static function getHash(string $password) : string {
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        /** @var string|bool|null $hashedPassword */
+        $hashedPassword = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => self::COST]);
 
         if (is_bool($hashedPassword)) {
-            throw new RuntimeException('Server error hashing password');
+            throw new \RuntimeException('Server error hashing password');
         }
 
-        return $hashedPassword;
+        return (string)$hashedPassword;
+    }
+
+    /**
+     * @return string
+     */
+    public function toString(): string
+    {
+        return $this->hashedPassword;
     }
 }

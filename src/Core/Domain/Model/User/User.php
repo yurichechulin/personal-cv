@@ -56,17 +56,17 @@ class User implements EntityInterface
 
     /**
      * User constructor.
+     * @param UniqueUserSpecificationInterface $uniqueUserSpecification
      * @param UuidInterface $uuid
      * @param string $email
      * @param string $password
-     * @param UniqueUserSpecificationInterface $uniqueUserSpecification
      * @param string $userName
      * @param string[] $roles
      */
-    public function __construct(UuidInterface $uuid,
+    public function __construct(UniqueUserSpecificationInterface $uniqueUserSpecification,
+                                UuidInterface $uuid,
                                 string $email,
                                 string $password,
-                                UniqueUserSpecificationInterface $uniqueUserSpecification,
                                 string $userName,
                                 array $roles = [self::DEFAULT_USER_ROLE])
     {

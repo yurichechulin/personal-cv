@@ -23,10 +23,10 @@ class CreatePostCommandHandler implements CommandHandlerInterface
 
     public function __invoke(CreatePostCommand $command) : string
     {
-        $post = new Post($command->getName(), $command->getDescription());
+        $post = new Post($command->getUuid(), $command->getName(), $command->getDescription());
 
         $this->postRepository->save($post);
 
-        return $post->getUuid();
+        return $post->getUuid()->toString();
     }
 }

@@ -32,7 +32,7 @@ class GetPostsController extends QueryController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/posts", name="posts", methods={"GET"})
+     * @Route("/api/posts", name="posts", methods={"GET"})
      */
     public function __invoke(Request $request) : Response
     {

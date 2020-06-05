@@ -12,18 +12,18 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class RegisterUserController extends CommandController
+class CreateUserController extends CommandController
 {
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/api/users", name="add_user", methods={"POST"})
+     * @Route("/signup", name="create_user", methods={"POST"})
      */
     public function __invoke(Request $request) : Response {
         $uuid = $request->get("uuid");
         $email = $request->get("email");
         $name = $request->get("name");
-        $password = $request->request->get("password");
+        $password = $request->get("password");
 
         Assert::uuid($uuid, "Поле uuid не соответствует типу");
         Assert::email($email, "Поле email не соответствует типу");

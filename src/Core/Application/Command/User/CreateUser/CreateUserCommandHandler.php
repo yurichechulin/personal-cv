@@ -7,8 +7,8 @@ namespace App\Core\Application\Command\User\CreateUser;
 use App\Core\Domain\Model\User\UniqueUserSpecificationInterface;
 use App\Core\Domain\Model\User\User;
 use App\Core\Domain\Model\User\UserRepositoryInterface;
-use App\Core\Domain\ValueObject\HashedPassword;
 use App\Shared\Application\Command\CommandHandlerInterface;
+use App\User\Domain\ValueObject\HashedPassword;
 
 class CreateUserCommandHandler implements CommandHandlerInterface
 {
@@ -35,10 +35,10 @@ class CreateUserCommandHandler implements CommandHandlerInterface
     public function __invoke(CreateUserCommand $command) : void
     {
         $user = new User(
+            $this->uniqueUserSpecificationInterface,
             $command->getUuid(),
             $command->getEmail(),
             HashedPassword::encode($command->getPassword())->toString(),
-            $this->uniqueUserSpecificationInterface,
             $command->getName());
 
         $this->userRepository->save($user);
