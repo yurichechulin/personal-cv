@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Core\Domain\Model\User;
 
+use App\Core\Domain\Exception\User\EmailAlreadyExistsException;
+use App\Shared\Domain\Exception\UuidAlreadyExistsException;
 use App\Shared\Domain\Model\EntityInterface;
 use App\Shared\Domain\Service\Assert\Assert;
 use DateTimeImmutable;
@@ -62,6 +64,8 @@ class User implements EntityInterface
      * @param string $password
      * @param string $userName
      * @param string[] $roles
+     * @throws EmailAlreadyExistsException
+     * @throws UuidAlreadyExistsException
      */
     public function __construct(UniqueUserSpecificationInterface $uniqueUserSpecification,
                                 UuidInterface $uuid,

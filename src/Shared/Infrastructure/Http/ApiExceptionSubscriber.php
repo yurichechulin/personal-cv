@@ -61,7 +61,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
 
             case $throwable instanceof InvalidInputDataException:
                 $event->setResponse(
-                    new JsonResponse($event->getThrowable()->getMessage(), Response::HTTP_BAD_REQUEST)
+                    new JsonResponse($throwable->getMessage(), Response::HTTP_BAD_REQUEST)
                 );
                 break;
         }

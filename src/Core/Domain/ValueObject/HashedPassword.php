@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\User\Domain\ValueObject;
+namespace App\Core\Domain\ValueObject;
 
 use App\Shared\Domain\Service\Assert\Assert;
+
 use const PASSWORD_BCRYPT;
 
 final class HashedPassword
@@ -49,7 +50,6 @@ final class HashedPassword
     {
         Assert::minLength($plainPassword, 6, 'Min 6 characters password');
 
-        /** @var string|bool|null $hashedPassword */
         $hashedPassword = password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => self::COST]);
 
         if (is_bool($hashedPassword)) {

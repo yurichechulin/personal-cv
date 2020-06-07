@@ -17,7 +17,7 @@ class CreateUserController extends CommandController
     /**
      * @param Request $request
      * @return JsonResponse
-     * @Route("/signup", name="create_user", methods={"POST"})
+     * @Route("/api/signup", name="create_user", methods={"POST"})
      */
     public function __invoke(Request $request) : Response {
         $uuid = $request->get("uuid");
