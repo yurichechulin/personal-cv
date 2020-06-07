@@ -11,12 +11,13 @@ use App\Shared\Domain\Service\Assert\Assert;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\UuidInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity()
  * @ORM\Table(name="app_user")
  */
-class User implements EntityInterface
+class User implements EntityInterface, UserInterface
 {
     public const DEFAULT_USER_ROLE = 'ROLE_USER';
 
@@ -104,7 +105,7 @@ class User implements EntityInterface
     /**
      * @return string
      */
-    public function getName(): string
+    public function getUsername(): string
     {
         return $this->userName;
     }
@@ -199,5 +200,26 @@ class User implements EntityInterface
      */
     private function addRole(string $role) : void {
         $this->roles[] = $role;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSalt() : string
+    {
+        return '';
+    }
+
+    public function eraseCredentials() : void
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserIdentifier() : string
+    {
+        return $this->email;
     }
 }
